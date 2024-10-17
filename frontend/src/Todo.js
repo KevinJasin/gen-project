@@ -8,8 +8,10 @@ const Todos = () => {
   const [description, setDescription] = useState('');
   const [editingTodo, setEditingTodo] = useState(null);
 
+  // Get token from localStorage for authentication
   const token = localStorage.getItem('token');
 
+  // Fetch todos on component mount
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -31,8 +33,8 @@ const Todos = () => {
         { title: newTodo, description },
         { headers: { Authorization: token } }
       );
-      setTodos([...todos, res.data]);
-      setNewTodo('');
+      setTodos([...todos, res.data]); // Update todos state
+      setNewTodo(''); // Clear input fields
       setDescription('');
     } catch (error) {
       console.error('Error creating todo', error.response?.data?.message);
@@ -42,7 +44,7 @@ const Todos = () => {
   const handleDeleteTodo = async (id) => {
     try {
       await axios.delete(`/api/todos/${id}`, { headers: { Authorization: token } });
-      setTodos(todos.filter(todo => todo._id !== id));
+      setTodos(todos.filter(todo => todo._id !== id)); // Remove deleted todo from state
     } catch (error) {
       console.error('Error deleting todo', error.response?.data?.message);
     }
@@ -52,8 +54,8 @@ const Todos = () => {
     try {
       const updatedTodo = { title: newTodo, description };
       const res = await axios.put(`/api/todos/${id}`, updatedTodo, { headers: { Authorization: token } });
-      setTodos(todos.map(todo => (todo._id === id ? res.data : todo)));
-      setNewTodo('');
+      setTodos(todos.map(todo => (todo._id === id ? res.data : todo))); // Update state with the new todo data
+      setNewTodo(''); // Clear input fields
       setDescription('');
       setEditingTodo(null);
     } catch (error) {
@@ -84,7 +86,11 @@ const Todos = () => {
         {todos.map(todo => (
           <li key={todo._id}>
             <strong>{todo.title}</strong>: {todo.description} - {todo.status}
-            <button onClick={() => { setNewTodo(todo.title); setDescription(todo.description); setEditingTodo(todo._id); }}>Edit</button>
+            <button onClick={() => { 
+              setNewTodo(todo.title); 
+              setDescription(todo.description); 
+              setEditingTodo(todo._id); 
+            }}>Edit</button>
             <button onClick={() => handleDeleteTodo(todo._id)}>Delete</button>
           </li>
         ))}
