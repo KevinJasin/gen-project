@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan')
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
@@ -12,6 +13,7 @@ connectDB();
 
 const app = express();
 app.use(express.json());
+app.use(morgan());
 
 // Add a root route
 app.get('/', (req, res) => {
